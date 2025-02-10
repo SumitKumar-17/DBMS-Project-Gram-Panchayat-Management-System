@@ -1,14 +1,153 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://22CS30056:sumit%23123@10.5.18.73:5432/22CS30056"
+}
+
+model AgricultureData {
+  record_id       Int    @id @default(autoincrement())
+  crop_type       String @db.VarChar
+  area_hectares   Float
+  season          String @db.VarChar
+  year            Int
+  estimated_yield Float
+  soil_type       String @db.VarChar
+}
+
+model Asset {
+  asset_id         Int      @id @default(autoincrement())
+  asset_type       String   @db.VarChar
+  name             String   @db.VarChar
+  acquisition_date DateTime @db.Timestamp(6)
+  value            Float
+  status           String   @db.VarChar
+  location         String   @db.VarChar
+}
+
+model Certificate {
+  certificate_id   Int      @id @default(autoincrement())
+  citizen_id       Int
+  certificate_type String   @db.VarChar
+  issue_date       DateTime @db.Timestamp(6)
+  valid_until      DateTime @db.Timestamp(6)
+  status           String   @db.VarChar
+  issued_by        String   @db.VarChar
+  Citizen          Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Citizen {
+  citizen_id        Int                 @id @default(autoincrement())
+  aadhar_no         String              @unique @db.VarChar
+  first_name        String              @db.VarChar
+  last_name         String              @db.VarChar
+  dob               DateTime            @db.Timestamp(6)
+  gender            String              @db.VarChar
+  phone             String              @db.VarChar
+  email             String              @db.VarChar
+  address           String              @db.VarChar
+  occupation        String              @db.VarChar
+  registration_date DateTime            @db.Timestamp(6)
+  Education         Education[]
+  Certificate       Certificate[]
+  Household         Household?
+  PanchayatMember   PanchayatMember?
+  SchemeBeneficiary SchemeBeneficiary[]
+  TaxRecord         TaxRecord[]
+}
+
+model Education {
+  education_id     Int      @id @default(autoincrement())
+  citizen_id       Int
+  degree          String   @db.VarChar 
+  institution     String   @db.VarChar
+  year_of_passing Int
+  specialization  String?  @db.VarChar
+  Citizen         Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+
+model EnvironmentalData {
+  record_id               Int      @id @default(autoincrement())
+  recorded_date           DateTime @db.Timestamp(6)
+  rainfall_mm             Float
+  groundwater_level       Float
+  waste_collection_status String   @db.VarChar
+  trees_planted           Int
+}
+
+model Expenditure {
+  expenditure_id Int      @id @default(autoincrement())
+  category       String   @db.VarChar
+  amount         Float
+  expense_date   DateTime @db.Timestamp(6)
+  purpose        String   @db.VarChar
+  approved_by    String   @db.VarChar
+  payment_mode   String   @db.VarChar
+}
+
+model Household {
+  household_id     Int      @id @default(autoincrement())
+  head_citizen_id  Int      @unique
+  house_no         String   @db.VarChar
+  category         String   @db.VarChar
+  total_members    Int
+  last_census_date DateTime @db.Timestamp(6)
+  Citizen          Citizen  @relation(fields: [head_citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Income {
+  income_id      Int      @id @default(autoincrement())
+  source         String   @db.VarChar
+  amount         Float
+  receipt_date   DateTime @db.Timestamp(6)
+  financial_year String   @db.VarChar
+  description    String   @db.VarChar
+}
+
+model PanchayatMember {
+  member_id      Int      @id @default(autoincrement())
+  citizen_id     Int      @unique
+  role           String   @db.VarChar
+  term_start     DateTime @db.Timestamp(6)
+  term_end       DateTime @db.Timestamp(6)
+  status         String   @db.VarChar
+  committee_name String   @db.VarChar
+  Citizen        Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model SchemeBeneficiary {
+  beneficiary_id  Int           @id @default(autoincrement())
+  scheme_id       Int
+  citizen_id      Int
+  enrollment_date DateTime      @db.Timestamp(6)
+  status          String        @db.VarChar
+  benefit_amount  Float
+  Citizen         Citizen       @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+  WelfareScheme   WelfareScheme @relation(fields: [scheme_id], references: [scheme_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model TaxRecord {
+  tax_id         Int       @id @default(autoincrement())
+  citizen_id     Int
+  tax_type       String    @db.VarChar
+  amount         Float
+  due_date       DateTime  @db.Timestamp(6)
+  paid_date      DateTime? @db.Timestamp(6)
+  payment_status String    @db.VarChar
+  financial_year String    @db.VarChar
+  Citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model WelfareScheme {
+  scheme_id         Int                 @id @default(autoincrement())
+  scheme_name       String              @db.VarChar
+  description       String              @db.VarChar
+  start_date        DateTime            @db.Timestamp(6)
+  end_date          DateTime            @db.Timestamp(6)
+  budget_allocated  Float
+  status            String              @db.VarChar
+  SchemeBeneficiary SchemeBeneficiary[]
 }
