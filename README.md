@@ -1,35 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 # DBMS  Group Project
-First, run the development server:
+# Next.js Project with Prisma
+
+This project uses Next.js for the frontend and Prisma for database management. Below is a list of commands that help manage and interact with the database.
+
+## Commands
+
+### 1. **`make install`**
+This command installs all dependencies and generates the Prisma Client.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+make install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. **`make dbpush`**
+This command pushes the Prisma schema changes to the database and regenerates the Prisma Client.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+make dbpush
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. **`make dbpull`**
+This command pulls the current schema from the database and regenerates the Prisma Client.
 
-## Learn More
+```bash
+make dbpull
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. **`make run`**
+Starts the Next.js development server.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+make run
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 5. **`make studio`**
+Launches Prisma Studio, a UI to interact with your database.
 
-## Deploy on Vercel
+```bash
+make studio
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Additional Information
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Prisma Studio**: A visual editor for your database to view and edit data.
+- **Database Synchronization**: Use `dbpush` and `dbpull` to ensure the Prisma schema is aligned with your database state.
+- **Next.js Development**: The `run` command will start the Next.js development server on `http://localhost:3000`.
+
+---
+
+## Prerequisites
+
+- Ensure you have Node.js and npm installed.
+- Set up Prisma in your project and configure your database.
+
+---
+
+## Setup Instructions
+
+1. Clone the repository.
+2. Run `make install` to install dependencies.
+3. Set up your `.env` file with the correct database connection string.
+4. Use `make dbpush` to push any changes to your database.
+5. Run `make run` to start the development server.
