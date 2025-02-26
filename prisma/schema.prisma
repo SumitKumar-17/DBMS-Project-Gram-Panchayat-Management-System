@@ -7,147 +7,88 @@ datasource db {
   url      = "postgresql://22CS30056:sumit%23123@10.5.18.73:5432/22CS30056"
 }
 
-model AgricultureData {
-  record_id       Int    @id @default(autoincrement())
-  crop_type       String @db.VarChar
-  area_hectares   Float
-  season          String @db.VarChar
-  year            Int
-  estimated_yield Float
-  soil_type       String @db.VarChar
-}
-
-model Asset {
-  asset_id         Int      @id @default(autoincrement())
-  asset_type       String   @db.VarChar
-  name             String   @db.VarChar
-  acquisition_date DateTime @db.Timestamp(6)
-  value            Float
-  status           String   @db.VarChar
-  location         String   @db.VarChar
-}
-
-model Certificate {
-  certificate_id   Int      @id @default(autoincrement())
-  citizen_id       Int
-  certificate_type String   @db.VarChar
-  issue_date       DateTime @db.Timestamp(6)
-  valid_until      DateTime @db.Timestamp(6)
-  status           String   @db.VarChar
-  issued_by        String   @db.VarChar
-  Citizen          Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+model Government_Monitor{
+    monitor_id Int @id @default(autoincrement())
+    email String @unique
+    password String 
 }
 
 model Citizen {
-  citizen_id        Int                 @id @default(autoincrement())
-  aadhar_no         String              @unique @db.VarChar
-  first_name        String              @db.VarChar
-  last_name         String              @db.VarChar
-  dob               DateTime            @db.Timestamp(6)
-  gender            String              @db.VarChar
-  phone             String              @db.VarChar
-  email             String              @db.VarChar
-  address           String              @db.VarChar
-  occupation        String              @db.VarChar
-  registration_date DateTime            @db.Timestamp(6)
-  Education         Education[]
-  Certificate       Certificate[]
-  Household         Household?
-  PanchayatMember   PanchayatMember?
-  SchemeBeneficiary SchemeBeneficiary[]
-  TaxRecord         TaxRecord[]
-}
-
-model Education {
-  education_id     Int      @id @default(autoincrement())
-  citizen_id       Int
-  degree          String   @db.VarChar 
-  institution     String   @db.VarChar
-  year_of_passing Int
-  specialization  String?  @db.VarChar
-  Citizen         Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-
-model EnvironmentalData {
-  record_id               Int      @id @default(autoincrement())
-  recorded_date           DateTime @db.Timestamp(6)
-  rainfall_mm             Float
-  groundwater_level       Float
-  waste_collection_status String   @db.VarChar
-  trees_planted           Int
-}
-
-model Expenditure {
-  expenditure_id Int      @id @default(autoincrement())
-  category       String   @db.VarChar
-  amount         Float
-  expense_date   DateTime @db.Timestamp(6)
-  purpose        String   @db.VarChar
-  approved_by    String   @db.VarChar
-  payment_mode   String   @db.VarChar
+  citizen_id            Int            @id @default(autoincrement())
+  name                  String
+  gender                String
+  dob                   DateTime
+  household_id          Int
+  educational_qualification String
+  household             Household      @relation(fields: [household_id], references: [household_id])
+  landRecords           LandRecord[]
+  panchayatEmployees    PanchayatEmployee[]
+  schemeEnrollments     SchemeEnrollment[]
+  vaccinations          Vaccination[]
+  censusData            CensusDatum[]
 }
 
 model Household {
-  household_id     Int      @id @default(autoincrement())
-  head_citizen_id  Int      @unique
-  house_no         String   @db.VarChar
-  category         String   @db.VarChar
-  total_members    Int
-  last_census_date DateTime @db.Timestamp(6)
-  Citizen          Citizen  @relation(fields: [head_citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+  household_id    Int       @id @default(autoincrement())
+  address         String
+  income          Decimal   @db.Decimal(10, 2)
+  citizens        Citizen[]
+  censusData      CensusDatum[]
 }
 
-model Income {
-  income_id      Int      @id @default(autoincrement())
-  source         String   @db.VarChar
-  amount         Float
-  receipt_date   DateTime @db.Timestamp(6)
-  financial_year String   @db.VarChar
-  description    String   @db.VarChar
-}
-
-model PanchayatMember {
-  member_id      Int      @id @default(autoincrement())
-  citizen_id     Int      @unique
-  role           String   @db.VarChar
-  term_start     DateTime @db.Timestamp(6)
-  term_end       DateTime @db.Timestamp(6)
-  status         String   @db.VarChar
-  committee_name String   @db.VarChar
-  Citizen        Citizen  @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model SchemeBeneficiary {
-  beneficiary_id  Int           @id @default(autoincrement())
-  scheme_id       Int
-  citizen_id      Int
-  enrollment_date DateTime      @db.Timestamp(6)
-  status          String        @db.VarChar
-  benefit_amount  Float
-  Citizen         Citizen       @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
-  WelfareScheme   WelfareScheme @relation(fields: [scheme_id], references: [scheme_id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model TaxRecord {
-  tax_id         Int       @id @default(autoincrement())
+model LandRecord {
+  land_id        Int      @id @default(autoincrement())
   citizen_id     Int
-  tax_type       String    @db.VarChar
-  amount         Float
-  due_date       DateTime  @db.Timestamp(6)
-  paid_date      DateTime? @db.Timestamp(6)
-  payment_status String    @db.VarChar
-  financial_year String    @db.VarChar
-  Citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+  area_acres     Decimal @db.Decimal(10, 2)
+  crop_type      String
+  citizen        Citizen @relation(fields: [citizen_id], references: [citizen_id])
+}
+
+model PanchayatEmployee {
+  employee_id    Int    @id @default(autoincrement())
+  citizen_id     Int
+  role           String
+  citizen        Citizen @relation(fields: [citizen_id], references: [citizen_id])
+}
+
+model Asset {
+  asset_id       Int      @id @default(autoincrement())
+  type           String
+  location       String
+  installation_date DateTime
 }
 
 model WelfareScheme {
-  scheme_id         Int                 @id @default(autoincrement())
-  scheme_name       String              @db.VarChar
-  description       String              @db.VarChar
-  start_date        DateTime            @db.Timestamp(6)
-  end_date          DateTime            @db.Timestamp(6)
-  budget_allocated  Float
-  status            String              @db.VarChar
-  SchemeBeneficiary SchemeBeneficiary[]
+  scheme_id      Int       @id @default(autoincrement())
+  name           String
+  description    String
+  schemeEnrollments SchemeEnrollment[]
+}
+
+model SchemeEnrollment {
+  enrollment_id  Int       @id @default(autoincrement())
+  citizen_id     Int
+  scheme_id      Int
+  enrollment_date DateTime
+  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
+  scheme         WelfareScheme @relation(fields: [scheme_id], references: [scheme_id])
+}
+
+model Vaccination {
+  vaccination_id Int       @id @default(autoincrement())
+  citizen_id     Int
+  vaccine_type   String
+  date_administered DateTime
+  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
+}
+
+model CensusDatum {
+  household_id   Int
+  citizen_id     Int
+  event_type     String
+  event_date     DateTime
+  household      Household @relation(fields: [household_id], references: [household_id])
+  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
+
+  @@id([household_id, citizen_id, event_date])
 }
