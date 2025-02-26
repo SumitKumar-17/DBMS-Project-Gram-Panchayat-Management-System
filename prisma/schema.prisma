@@ -7,91 +7,89 @@ datasource db {
   url      = "postgresql://22CS30056:sumit%23123@10.5.18.73:5432/22CS30056"
 }
 
-model Government_Monitor{
-    monitor_id Int @id @default(autoincrement())
-    email String @unique
-    password String 
+model assets {
+  asset_id          Int      @id @default(autoincrement())
+  type              String   @db.VarChar(255)
+  location          String   @db.VarChar(255)
+  installation_date DateTime @db.Date
 }
 
-model Citizen {
-  citizen_id            Int            @id @default(autoincrement())
-  email String @unique
-  password String
-  name                  String
-  gender                String
-  dob                   DateTime
-  household_id          Int
-  educational_qualification String
-  
-  household             Household      @relation(fields: [household_id], references: [household_id])
-  landRecords           LandRecord[]
-  panchayatEmployees    PanchayatEmployee[]
-  schemeEnrollments     SchemeEnrollment[]
-  vaccinations          Vaccination[]
-  censusData            CensusDatum[]
-}
-
-model Household {
-  household_id    Int       @id @default(autoincrement())
-  address         String
-  income          Decimal   @db.Decimal(10, 2)
-  citizens        Citizen[]
-  censusData      CensusDatum[]
-}
-
-model LandRecord {
-  land_id        Int      @id @default(autoincrement())
-  citizen_id     Int
-  area_acres     Decimal @db.Decimal(10, 2)
-  crop_type      String
-  citizen        Citizen @relation(fields: [citizen_id], references: [citizen_id])
-}
-
-model PanchayatEmployee {
-  employee_id    Int    @id @default(autoincrement())
-  citizen_id     Int
-  role           String
-  citizen        Citizen @relation(fields: [citizen_id], references: [citizen_id])
-}
-
-model Asset {
-  asset_id       Int      @id @default(autoincrement())
-  type           String
-  location       String
-  installation_date DateTime
-}
-
-model WelfareScheme {
-  scheme_id      Int       @id @default(autoincrement())
-  name           String
-  description    String
-  schemeEnrollments SchemeEnrollment[]
-}
-
-model SchemeEnrollment {
-  enrollment_id  Int       @id @default(autoincrement())
-  citizen_id     Int
-  scheme_id      Int
-  enrollment_date DateTime
-  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
-  scheme         WelfareScheme @relation(fields: [scheme_id], references: [scheme_id])
-}
-
-model Vaccination {
-  vaccination_id Int       @id @default(autoincrement())
-  citizen_id     Int
-  vaccine_type   String
-  date_administered DateTime
-  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
-}
-
-model CensusDatum {
-  household_id   Int
-  citizen_id     Int
-  event_type     String
-  event_date     DateTime
-  household      Household @relation(fields: [household_id], references: [household_id])
-  citizen        Citizen   @relation(fields: [citizen_id], references: [citizen_id])
+model census_data {
+  household_id Int
+  citizen_id   Int
+  event_type   String     @db.VarChar(255)
+  event_date   DateTime   @db.Date
+  citizens     citizens   @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+  households   households @relation(fields: [household_id], references: [household_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([household_id, citizen_id, event_date])
+}
+
+model citizens {
+  citizen_id                Int                    @id @default(autoincrement())
+  name                      String                 @db.VarChar(255)
+  gender                    String                 @db.VarChar(50)
+  dob                       DateTime               @db.Date
+  household_id              Int
+  educational_qualification String                 @db.VarChar(255)
+  email                     String                 @unique @db.VarChar(255)
+  census_data               census_data[]
+  households                households             @relation(fields: [household_id], references: [household_id], onDelete: NoAction, onUpdate: NoAction)
+  land_records              land_records[]
+  panachayat_employees      panachayat_employees[]
+  scheme_enrollments        scheme_enrollments[]
+  vaccinations              vaccinations[]
+}
+
+model government_monitor {
+  monitor_id Int    @id @default(autoincrement())
+  email      String @unique @db.VarChar(255)
+  password   String @db.VarChar(255)
+}
+
+model households {
+  household_id Int           @id @default(autoincrement())
+  address      String        @db.VarChar(255)
+  income       Decimal       @db.Decimal(10, 2)
+  census_data  census_data[]
+  citizens     citizens[]
+}
+
+model land_records {
+  land_id    Int      @id @default(autoincrement())
+  citizen_id Int
+  area_acres Decimal  @db.Decimal(10, 2)
+  crop_type  String   @db.VarChar(255)
+  citizens   citizens @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model panachayat_employees {
+  employee_id Int      @id @default(autoincrement())
+  citizen_id  Int
+  role        String   @db.VarChar(255)
+  citizens    citizens @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model scheme_enrollments {
+  enrollment_id   Int             @id @default(autoincrement())
+  citizen_id      Int
+  scheme_id       Int
+  enrollment_date DateTime        @db.Date
+  citizens        citizens        @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+  welfare_schemes welfare_schemes @relation(fields: [scheme_id], references: [scheme_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model vaccinations {
+  vaccination_id    Int      @id @default(autoincrement())
+  citizen_id        Int
+  vaccine_type      String   @db.VarChar(255)
+  date_administered DateTime @db.Date
+  citizens          citizens @relation(fields: [citizen_id], references: [citizen_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model welfare_schemes {
+  scheme_id          Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(255)
+  description        String
+  scheme_enrollments scheme_enrollments[]
 }
