@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     if (!scheme) {
       return NextResponse.json(
         { message: "Scheme not found" },
-        { status: 404 }
+        { status: 204 }
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     if (existingEnrollment) {
       return NextResponse.json(
         { message: "Citizen already enrolled in the scheme" },
-        { status: 400 }
+        { status: 203 }
       );
     }
 
@@ -86,7 +86,6 @@ export async function POST(request: Request) {
     return NextResponse.json({
       code:0,
       message: "Scheme enrollment created successfully",
-      // enrollment,
     })
   } catch (error) {
     console.error("Error creating scheme enrollment:", error);

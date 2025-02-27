@@ -90,15 +90,15 @@ export default function EmployeeDashboard() {
       const response = await axios.post("/api/scheme-enrollments", newSchemeEnrollment);
       if(response.data.code===0){
 
-      setNewSchemeEnrollment({
-        citizen_id: "",
-        scheme_id: "",
-      });
-      loadData();
+        setNewSchemeEnrollment({
+          citizen_id: "",
+          scheme_id: "",
+        });
+        loadData();
       }
       else {
-        console.error("Scheme enrollment failed");
-        setError("Failed to add scheme enrollment");
+        console.error(response.data.message);
+        setError(response.data.message);
 
       }
     } catch (error) {
