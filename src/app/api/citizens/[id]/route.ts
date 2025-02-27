@@ -2,9 +2,11 @@
 import {  NextRequest, NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 import { CitizenDetails } from "@/types/models";
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+
   try {
-    const { id } = context.params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ message: "Citizen ID is required" }, { status: 400 });
