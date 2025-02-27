@@ -18,7 +18,7 @@ export async function GET() {
         if (curr.gender.toLowerCase() === "female") acc.female++;
         return acc;
       },
-      { male: 0, female: 0 }
+      { male: 0, female: 0 },
     );
 
     // Get vaccination statistics
@@ -33,7 +33,7 @@ export async function GET() {
         acc[curr.vaccine_type] = (acc[curr.vaccine_type] || 0) + 1;
         return acc;
       },
-      {}
+      {},
     );
 
     // Get land statistics
@@ -46,7 +46,7 @@ export async function GET() {
 
     const totalLand = landRecords.reduce(
       (sum, record) => sum + Number(record.area_acres),
-      0
+      0,
     );
 
     const cropDistribution = landRecords.reduce(
@@ -55,7 +55,7 @@ export async function GET() {
           (acc[curr.crop_type] || 0) + Number(curr.area_acres);
         return acc;
       },
-      {}
+      {},
     );
 
     // Get scheme statistics
@@ -71,7 +71,7 @@ export async function GET() {
         acc[schemeName] = (acc[schemeName] || 0) + 1;
         return acc;
       },
-      {}
+      {},
     );
 
     const stats: DashboardStats = {
@@ -96,7 +96,7 @@ export async function GET() {
     console.error("Error fetching monitor stats:", error);
     return NextResponse.json(
       { message: "Failed to fetch statistics" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

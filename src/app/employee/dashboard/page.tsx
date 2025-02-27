@@ -87,19 +87,19 @@ export default function EmployeeDashboard() {
         console.error("Citizen ID and Scheme ID must not be empty");
         return;
       }
-      const response = await axios.post("/api/scheme-enrollments", newSchemeEnrollment);
-      if(response.data.code===0){
-
+      const response = await axios.post(
+        "/api/scheme-enrollments",
+        newSchemeEnrollment,
+      );
+      if (response.data.code === 0) {
         setNewSchemeEnrollment({
           citizen_id: "",
           scheme_id: "",
         });
         loadData();
-      }
-      else {
+      } else {
         console.error(response.data.message);
         setError(response.data.message);
-
       }
     } catch (error) {
       console.error(error);
@@ -408,7 +408,6 @@ export default function EmployeeDashboard() {
                     <option value="31">Scheme 1</option>
                     <option value="32">Scheme 2</option>
                     <option value="33">Scheme 3</option>
-
                   </select>
                 </div>
 

@@ -18,7 +18,7 @@ export async function GET() {
     console.error("Error fetching scheme enrollments:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     if (!citizen) {
       return NextResponse.json(
         { message: "Citizen not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -53,11 +53,11 @@ export async function POST(request: Request) {
     if (!scheme) {
       return NextResponse.json(
         { message: "Scheme not found" },
-        { status: 204 }
+        { status: 204 },
       );
     }
 
-   //Neccessary checks to check if that citizen is already enrolled in that scheme
+    //Neccessary checks to check if that citizen is already enrolled in that scheme
     const existingEnrollment = await prismadb.scheme_enrollments.findFirst({
       where: {
         citizen_id: parseInt(citizen_id),
@@ -68,30 +68,29 @@ export async function POST(request: Request) {
     if (existingEnrollment) {
       return NextResponse.json(
         { message: "Citizen already enrolled in the scheme" },
-        { status: 203 }
+        { status: 203 },
       );
     }
 
-    const enrollment =await prismadb.scheme_enrollments.create({
+    const enrollment = await prismadb.scheme_enrollments.create({
       data: {
         citizen_id: parseInt(citizen_id),
         scheme_id: parseInt(scheme_id),
         enrollment_date: new Date(),
       },
-    })
+    });
 
-    console.log("Scheme enrollment created:",enrollment);
-
+    console.log("Scheme enrollment created:", enrollment);
 
     return NextResponse.json({
-      code:0,
+      code: 0,
       message: "Scheme enrollment created successfully",
-    })
+    });
   } catch (error) {
     console.error("Error creating scheme enrollment:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

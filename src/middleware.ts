@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const JWT_SECRET = new TextEncoder().encode(
-      process.env.JWT_SECRET || "your-secret-key"
+      process.env.JWT_SECRET || "your-secret-key",
     );
 
     // Verify the token
@@ -44,15 +44,15 @@ export async function middleware(request: NextRequest) {
       switch (userType) {
         case "employee":
           return NextResponse.redirect(
-            new URL("/employee/dashboard", request.url)
+            new URL("/employee/dashboard", request.url),
           );
         case "citizen":
           return NextResponse.redirect(
-            new URL("/citizen/dashboard", request.url)
+            new URL("/citizen/dashboard", request.url),
           );
         case "monitor":
           return NextResponse.redirect(
-            new URL("/monitor/dashboard", request.url)
+            new URL("/monitor/dashboard", request.url),
           );
       }
     }

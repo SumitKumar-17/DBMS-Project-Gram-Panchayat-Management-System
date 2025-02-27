@@ -20,7 +20,7 @@ export async function GET() {
     console.error("Error fetching vaccinations:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     console.error("Error creating vaccination:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

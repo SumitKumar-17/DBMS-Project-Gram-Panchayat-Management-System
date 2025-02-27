@@ -50,7 +50,7 @@ export default function LoginForm() {
       setError(
         error instanceof Error
           ? error.message
-          : "An error occurred during login"
+          : "An error occurred during login",
       );
     } finally {
       setLoading(false);

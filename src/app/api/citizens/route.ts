@@ -19,7 +19,7 @@ export async function GET() {
     console.error("Error fetching citizens:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

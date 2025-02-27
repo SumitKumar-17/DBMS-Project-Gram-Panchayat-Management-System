@@ -19,7 +19,7 @@ export default function SchemeDistributionChart({
         data: Object.values(distribution),
         backgroundColor: Object.keys(distribution).map(
           (_, i) =>
-            `hsl(${(i * 360) / Object.keys(distribution).length}, 70%, 50%)`
+            `hsl(${(i * 360) / Object.keys(distribution).length}, 70%, 50%)`,
         ),
         borderColor: ["#ffffff"],
         borderWidth: 1,

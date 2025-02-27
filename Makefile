@@ -22,3 +22,7 @@ build:
 
 seed:
 	node scripts/seed.js
+
+FORMAT_FILES := "**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+format:
+	npx prettier --write $(FORMAT_FILES)

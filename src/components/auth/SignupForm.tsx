@@ -39,7 +39,7 @@ export default function SignupForm() {
         router.push(
           response.data!.userType === "employee"
             ? "/employee/dashboard"
-            : "/citizen/dashboard"
+            : "/citizen/dashboard",
         );
       } else {
         setError(response.message);

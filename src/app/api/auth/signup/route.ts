@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.json(
         { message: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     if (existingUser) {
       return NextResponse.json(
         { message: "User already exists" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -82,13 +82,13 @@ export async function POST(request: Request) {
           userType: isEmployee ? "employee" : "citizen",
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json(
       { message: "Internal server error", code: -1 },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

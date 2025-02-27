@@ -19,7 +19,7 @@ export default function CitizenDashboard() {
   const loadCitizenData = async () => {
     try {
       const response = await axios.get<CitizenDetails>(
-        `/api/citizens/${user?.id}`
+        `/api/citizens/${user?.id}`,
       );
       setCitizenData(response.data);
     } catch (err) {
@@ -142,7 +142,7 @@ export default function CitizenDashboard() {
                     </td>
                     <td className="px-4 py-2">
                       {new Date(
-                        enrollment.enrollment_date
+                        enrollment.enrollment_date,
                       ).toLocaleDateString()}
                     </td>
                   </tr>

@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             userType: isEmployee ? "employee" : "citizen",
           },
           JWT_SECRET,
-          { expiresIn: "24h" }
+          { expiresIn: "24h" },
         );
 
         return NextResponse.json<AuthResponse>({
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
             userType: "monitor",
           },
           JWT_SECRET,
-          { expiresIn: "24h" }
+          { expiresIn: "24h" },
         );
 
         return NextResponse.json<AuthResponse>({
