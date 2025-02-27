@@ -33,6 +33,7 @@ model citizens {
   household_id              Int
   educational_qualification String                 @db.VarChar(255)
   email                     String                 @unique @db.VarChar(255)
+  password                  String                 @db.VarChar(255)   
   census_data               census_data[]
   households                households             @relation(fields: [household_id], references: [household_id], onDelete: NoAction, onUpdate: NoAction)
   land_records              land_records[]
