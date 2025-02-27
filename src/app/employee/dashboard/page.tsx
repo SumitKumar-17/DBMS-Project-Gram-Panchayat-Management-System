@@ -14,7 +14,6 @@ export default function EmployeeDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Form states
   const [newVaccination, setNewVaccination] = useState({
     citizen_id: "",
     vaccine_type: "",
@@ -33,8 +32,12 @@ export default function EmployeeDashboard() {
   });
 
   useEffect(() => {
+    if(user?.id)
+      {
     loadData();
-  }, []);
+
+  }
+  }, [user]);
 
   const loadData = async () => {
     try {
@@ -107,24 +110,34 @@ export default function EmployeeDashboard() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+        <p className="text-red-600">Error: {error}</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-50">
+
+      <nav className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold">Employee Dashboard</h1>
-              </div>
-            </div>
             <div className="flex items-center">
-              <span className="text-gray-700 mr-4">Welcome, {user?.name}</span>
+              <h1 className="text-2xl font-bold text-gray-900">Employee Dashboard</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-700">Welcome, {user?.name}</span>
               <button
                 onClick={logout}
-                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
               >
                 Logout
               </button>
@@ -133,19 +146,19 @@ export default function EmployeeDashboard() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Tab Navigation */}
-        <div className="mb-6 border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+        <div className="mb-8">
+          <nav className="flex space-x-4 bg-white p-2 rounded-lg shadow-sm">
             {["citizens", "vaccinations", "land", "schemes"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as typeof activeTab)}
                 className={`${
                   activeTab === tab
-                    ? "border-indigo-500 text-indigo-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm capitalize`}
+                    ? "bg-indigo-500 text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                } px-4 py-2 rounded-md transition-colors duration-200 text-sm font-medium capitalize`}
               >
                 {tab}
               </button>
@@ -153,42 +166,30 @@ export default function EmployeeDashboard() {
           </nav>
         </div>
 
-        {/* Tab Content */}
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white rounded-xl shadow-sm p-6">
           {activeTab === "citizens" && (
             <div>
-              <h2 className="text-lg font-semibold mb-4">Citizens List</h2>
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">Citizens List</h2>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Gender
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        DOB
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Education
-                      </th>
+                      {["Name", "Gender", "DOB", "Education"].map((header) => (
+                        <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          {header}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {citizens.map((citizen) => (
-                      <tr key={citizen.citizen_id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {citizen.name}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {citizen.gender}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                      <tr key={citizen.citizen_id} className="hover:bg-gray-50 transition-colors duration-150">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{citizen.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{citizen.gender}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                           {new Date(citizen.dob).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                           {citizen.educational_qualification}
                         </td>
                       </tr>
@@ -201,76 +202,33 @@ export default function EmployeeDashboard() {
 
           {activeTab === "vaccinations" && (
             <div>
-              <h2 className="text-lg font-semibold mb-4">
-                Add Vaccination Record
-              </h2>
-              <form onSubmit={handleAddVaccination} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Citizen
-                  </label>
-                  <select
-                    value={newVaccination.citizen_id}
-                    onChange={(e) =>
-                      setNewVaccination({
-                        ...newVaccination,
-                        citizen_id: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Citizen</option>
-                    {citizens.map((citizen) => (
-                      <option
-                        key={citizen.citizen_id}
-                        value={citizen.citizen_id}
-                      >
-                        {citizen.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Vaccine Type
-                  </label>
-                  <input
-                    type="text"
-                    value={newVaccination.vaccine_type}
-                    onChange={(e) =>
-                      setNewVaccination({
-                        ...newVaccination,
-                        vaccine_type: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Date Administered
-                  </label>
-                  <input
-                    type="date"
-                    value={newVaccination.date_administered}
-                    onChange={(e) =>
-                      setNewVaccination({
-                        ...newVaccination,
-                        date_administered: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">Add Vaccination Record</h2>
+              <form onSubmit={handleAddVaccination} className="max-w-2xl space-y-6">
+                <FormField
+                  label="Citizen"
+                  type="select"
+                  value={newVaccination.citizen_id}
+                  onChange={(e) => setNewVaccination({...newVaccination, citizen_id: e.target.value})}
+                  options={citizens.map(c => ({ 
+                    value: String(c.citizen_id),
+                    label: c.name 
+                  }))}
+                />
+                <FormField
+                  label="Vaccine Type"
+                  type="text"
+                  value={newVaccination.vaccine_type}
+                  onChange={(e) => setNewVaccination({...newVaccination, vaccine_type: e.target.value})}
+                />
+                <FormField
+                  label="Date Administered"
+                  type="date"
+                  value={newVaccination.date_administered}
+                  onChange={(e) => setNewVaccination({...newVaccination, date_administered: e.target.value})}
+                />
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
                 >
                   Add Vaccination Record
                 </button>
@@ -280,77 +238,35 @@ export default function EmployeeDashboard() {
 
           {activeTab === "land" && (
             <div>
-              <h2 className="text-lg font-semibold mb-4">Add Land Record</h2>
-              <form onSubmit={handleAddLandRecord} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Citizen
-                  </label>
-                  <select
-                    value={newLandRecord.citizen_id}
-                    onChange={(e) =>
-                      setNewLandRecord({
-                        ...newLandRecord,
-                        citizen_id: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Citizen</option>
-                    {citizens.map((citizen) => (
-                      <option
-                        key={citizen.citizen_id}
-                        value={citizen.citizen_id}
-                      >
-                        {citizen.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Area (Acres)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={newLandRecord.area_acres}
-                    onChange={(e) =>
-                      setNewLandRecord({
-                        ...newLandRecord,
-                        area_acres: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Crop Type
-                  </label>
-                  <input
-                    type="text"
-                    value={newLandRecord.crop_type}
-                    onChange={(e) =>
-                      setNewLandRecord({
-                        ...newLandRecord,
-                        crop_type: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">Add Land Record</h2>
+              <form onSubmit={handleAddLandRecord} className="max-w-2xl space-y-6">
+                <FormField
+                  label="Citizen"
+                  type="select"
+                  value={newLandRecord.citizen_id}
+                  onChange={(e) => setNewLandRecord({...newLandRecord, citizen_id: e.target.value})}
+                  options={citizens.map(c => ({ 
+                    value: String(c.citizen_id),
+                    label: c.name 
+                  }))}
+                />
+                <FormField
+                  label="Area (Acres)"
+                  type="number"
+                  value={newLandRecord.area_acres}
+                  onChange={(e) => setNewLandRecord({...newLandRecord, area_acres: e.target.value})}
+                />
+                <FormField
+                  label="Crop Type"
+                  type="text"
+                  value={newLandRecord.crop_type}
+                  onChange={(e) => setNewLandRecord({...newLandRecord, crop_type: e.target.value})}
+                />
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
                 >
-                  Add Record
+                  Add Land Record
                 </button>
               </form>
             </div>
@@ -358,62 +274,32 @@ export default function EmployeeDashboard() {
 
           {activeTab === "schemes" && (
             <div>
-              <h2 className="text-lg font-semibold mb-4">
-                Add Scheme Enrollment
-              </h2>
-              <form onSubmit={handleAddSchemeEnrollment} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Citizen
-                  </label>
-                  <select
-                    value={newSchemeEnrollment.citizen_id}
-                    onChange={(e) =>
-                      setNewSchemeEnrollment({
-                        ...newSchemeEnrollment,
-                        citizen_id: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Citizen</option>
-                    {citizens.map((citizen) => (
-                      <option
-                        key={citizen.citizen_id}
-                        value={citizen.citizen_id}
-                      >
-                        {citizen.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Scheme
-                  </label>
-                  <select
-                    value={newSchemeEnrollment.scheme_id}
-                    onChange={(e) =>
-                      setNewSchemeEnrollment({
-                        ...newSchemeEnrollment,
-                        scheme_id: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Scheme</option>
-                    <option value="31">Scheme 1</option>
-                    <option value="32">Scheme 2</option>
-                    <option value="33">Scheme 3</option>
-                  </select>
-                </div>
-
+              <h2 className="text-xl font-semibold mb-6 text-gray-900">Add Scheme Enrollment</h2>
+              <form onSubmit={handleAddSchemeEnrollment} className="max-w-2xl space-y-6">
+                <FormField
+                  label="Citizen"
+                  type="select"
+                  value={newSchemeEnrollment.citizen_id}
+                  onChange={(e) => setNewSchemeEnrollment({...newSchemeEnrollment, citizen_id: e.target.value})}
+                  options={citizens.map(c => ({ 
+                    value: String(c.citizen_id),
+                    label: c.name 
+                  }))}
+                />
+                <FormField
+                  label="Scheme"
+                  type="select"
+                  value={newSchemeEnrollment.scheme_id}
+                  onChange={(e) => setNewSchemeEnrollment({...newSchemeEnrollment, scheme_id: e.target.value})}
+                  options={[
+                    { value: "31", label: "Scheme 1" },
+                    { value: "32", label: "Scheme 2" },
+                    { value: "33", label: "Scheme 3" },
+                  ]}
+                />
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
                 >
                   Add Enrollment
                 </button>
@@ -422,6 +308,43 @@ export default function EmployeeDashboard() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+ 
+function FormField({ label, type, value, onChange, options = [] }: {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  options?: { value: string; label: string; }[];
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {label}
+      </label>
+      {type === 'select' ? (
+        <select
+          value={value}
+          onChange={onChange}
+          className="mt-1 block w-full text-black rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors duration-200"
+          required
+        >
+          <option value="">Select {label}</option>
+          {options.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          className="mt-1 block w-full  text-black rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors duration-200"
+          required
+        />
+      )}
     </div>
   );
 }

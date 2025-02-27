@@ -15,16 +15,10 @@ export default function MonitorNavbar({
         <div className="flex justify-between items-center h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-bold">Monitor Dashboard</h1>
+              <h1 className="text-xl  text-black font-bold">Monitor Dashboard</h1>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <button
-              onClick={onGenerateReport}
-              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-            >
-              Generate Report
-            </button>
             <span className="text-gray-700">Welcome, {userEmail}</span>
             <button
               onClick={onLogout}
