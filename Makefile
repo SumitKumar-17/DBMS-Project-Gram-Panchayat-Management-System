@@ -21,4 +21,4 @@ build:
 	npm run build
 
 seed:
-	node seed.js
+	node scripts/seed.js

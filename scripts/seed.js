@@ -207,6 +207,7 @@ async function main() {
     console.log("- Email: bob@example.com / Password: password123");
     console.log("\nGovernment Monitor:");
     console.log("- Email: monitor@gov.in / Password: password123");
+    console.log("Seeder Script Completed!");
   } catch (error) {
     console.error("Error seeding data:", error);
     process.exit(1);
