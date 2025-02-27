@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
-import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import MonitorNavbar from "@/components/monitor/MonitorNavbar";

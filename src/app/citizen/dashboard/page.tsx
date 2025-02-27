@@ -13,6 +13,7 @@ export default function CitizenDashboard() {
 
   useEffect(() => {
     loadCitizenData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadCitizenData = async () => {

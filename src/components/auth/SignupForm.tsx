@@ -44,10 +44,9 @@ export default function SignupForm() {
       } else {
         setError(response.message);
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message || "An error occurred during signup"
-      );
+    } catch (error) {
+      console.error("Error signing up:", error);
+      setError("Failed to sign up");
     } finally {
       setLoading(false);
     }

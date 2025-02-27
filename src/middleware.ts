@@ -60,6 +60,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch (error) {
     // If token is invalid, clear it and redirect to login
+    console.error("Error verifying token:", error);
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("token");
     return response;

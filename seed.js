@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function clearDatabase() {
   console.log("Clearing existing data...");
   // Delete in correct order based on foreign key dependencies
-  await prisma.census_data.deleteMany({}); // Delete first as it references citizens
+  await prisma.census_data.deleteMany({}); 
   await prisma.vaccinations.deleteMany({});
   await prisma.scheme_enrollments.deleteMany({});
   await prisma.land_records.deleteMany({});

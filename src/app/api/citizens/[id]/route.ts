@@ -1,13 +1,19 @@
-import { NextResponse } from "next/server";
+
+import {  NextRequest, NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 import { CitizenDetails } from "@/types/models";
-
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
   try {
-    const citizenId = parseInt(params.id);
+    const { id } = context.params;
+
+    if (!id) {
+      return NextResponse.json({ message: "Citizen ID is required" }, { status: 400 });
+    }
+
+    const citizenId = parseInt(id, 10);
+    if (isNaN(citizenId)) {
+      return NextResponse.json({ message: "Invalid Citizen ID" }, { status: 400 });
+    }
     const citizen = (await prismadb.citizens.findUnique({
       where: { citizen_id: citizenId },
       include: {

@@ -83,12 +83,24 @@ export default function EmployeeDashboard() {
   const handleAddSchemeEnrollment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("/api/scheme-enrollments", newSchemeEnrollment);
+      if (!newSchemeEnrollment.citizen_id || !newSchemeEnrollment.scheme_id) {
+        console.error("Citizen ID and Scheme ID must not be empty");
+        return;
+      }
+      const response = await axios.post("/api/scheme-enrollments", newSchemeEnrollment);
+      if(response.data.code===0){
+
       setNewSchemeEnrollment({
         citizen_id: "",
         scheme_id: "",
       });
       loadData();
+      }
+      else {
+        console.error("Scheme enrollment failed");
+        setError("Failed to add scheme enrollment");
+
+      }
     } catch (error) {
       console.error(error);
       setError("Failed to add scheme enrollment");
@@ -393,7 +405,10 @@ export default function EmployeeDashboard() {
                     required
                   >
                     <option value="">Select Scheme</option>
-                    {/* Add scheme options here */}
+                    <option value="31">Scheme 1</option>
+                    <option value="32">Scheme 2</option>
+                    <option value="33">Scheme 3</option>
+
                   </select>
                 </div>
 

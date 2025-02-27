@@ -40,6 +40,13 @@ Launches Prisma Studio, a UI to interact with your database.
 make studio
 ```
 
+### 5. **`make seed`**
+Feed some default entries into the database for testing purposes.
+
+```bash
+make seed
+```
+
 ## Additional Information
 
 - **Prisma Studio**: A visual editor for your database to view and edit data.
@@ -62,3 +69,5 @@ make studio
 3. Set up your `.env` file with the correct database connection string.
 4. Use `make dbpush` to push any changes to your database.
 5. Run `make run` to start the development server.
+6. Run `make studio` to launch Prisma Studio.
+7. Run `make seed` to seed the database with default entries.
