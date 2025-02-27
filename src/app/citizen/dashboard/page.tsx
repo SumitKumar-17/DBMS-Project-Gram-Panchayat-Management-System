@@ -203,7 +203,7 @@ export default function CitizenDashboard() {
 }
 
 // Helper component for Personal Information rows
-function InfoRow({ label, value }: { label: string; value: any }) {
+function InfoRow({ label, value }: { label: string; value: string|number }) {
   return (
     <div className="flex items-center py-2 border-b border-gray-100 last:border-0">
       <span className="text-sm font-medium text-gray-500 w-1/3">{label}:</span>

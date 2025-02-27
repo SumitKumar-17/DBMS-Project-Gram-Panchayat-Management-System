@@ -1,12 +1,10 @@
 interface MonitorNavbarProps {
   userEmail: string;
-  onGenerateReport: () => void;
   onLogout: () => void;
 }
 
 export default function MonitorNavbar({
   userEmail,
-  onGenerateReport,
   onLogout,
 }: MonitorNavbarProps) {
   return (

@@ -81,7 +81,6 @@ export default function MonitorDashboard() {
       <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm shadow-sm">
         <MonitorNavbar
           userEmail={user?.email || ""}
-          onGenerateReport={generatePDF}
           onLogout={logout}
         />
       </div>
