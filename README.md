@@ -71,3 +71,14 @@ make seed
 5. Run `make run` to start the development server.
 6. Run `make studio` to launch Prisma Studio.
 7. Run `make seed` to seed the database with default entries.
+
+
+The project is now set up and ready to use. You can start building your application with Next.js and Prisma.
+
+## Schema Documentation
+The schema documentation for the project is available [here](documents/schema.md).
+
+## ER Diagram
+You can view the ER Diagram for the database schema below:
+![ER Diagram](documents/schema.png)
+
