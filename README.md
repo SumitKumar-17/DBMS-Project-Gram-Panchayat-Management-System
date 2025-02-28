@@ -1,5 +1,11 @@
 # DBMS Group Project
 
+## Group Members
+- [] Sumit Kumar 22CS30056
+- [] Aviral Singh 22CS30015
+- [] Mayash Nayak  22CS30064
+
+
 # Next.js Project with Prisma
 
 This project uses Next.js for the frontend and Prisma for database management. Below is a list of commands that help manage and interact with the database.
