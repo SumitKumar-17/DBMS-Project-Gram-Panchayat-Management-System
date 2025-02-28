@@ -3,10 +3,11 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const householdId = parseInt(params.id, 10);
+    const { id } = await params;
+    const householdId = parseInt(id, 10);
 
     const citizens = await prismadb.citizens.findMany({
       where: {

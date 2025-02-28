@@ -3,11 +3,12 @@ import prismadb from "@/lib/prismadb";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
-    const citizenId = parseInt(params.id, 10);
+    const citizenId = parseInt(id, 10);
 
     const updatedCitizen = await prismadb.citizens.update({
       where: { citizen_id: citizenId },
