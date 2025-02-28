@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Citizen, HouseholdWithMembers } from "@/types/models";
 import axios from "axios";
+import AddHousehold from "./AddHousehold";
 
 interface HouseholdManagerProps {
   onUpdate: () => void;
@@ -49,6 +50,8 @@ export default function HouseholdManager({ onUpdate }: HouseholdManagerProps) {
 
   return (
     <div className="space-y-6">
+      <AddHousehold onSuccess={fetchAllHouseholds} />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {households.map((household) => (
           <div
