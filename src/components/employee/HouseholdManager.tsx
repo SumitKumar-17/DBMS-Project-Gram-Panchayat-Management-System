@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Citizen, HouseholdWithMembers } from "@/types/models";
 import axios from "axios";
 import AddHousehold from "./AddHousehold";
+import AddCitizenToHousehold from "./AddCitizenToHousehold";
+import AddExistingCitizen from "./AddExistingCitizen";
 
 interface HouseholdManagerProps {
   onUpdate: () => void;
@@ -162,9 +164,21 @@ export default function HouseholdManager({ onUpdate }: HouseholdManagerProps) {
                   </div>
 
                   <div className="mt-6">
-                    <h4 className="text-sm font-medium text-gray-500 mb-3">
-                      Family Members ({household.citizens.length})
-                    </h4>
+                    <div className="flex justify-between items-center mb-3">
+                      <h4 className="text-sm font-medium text-gray-500">
+                        Family Members ({household.citizens.length})
+                      </h4>
+                      <div className="flex items-center">
+                        <AddCitizenToHousehold
+                          householdId={household.household_id}
+                          onSuccess={fetchAllHouseholds}
+                        />
+                        <AddExistingCitizen
+                          householdId={household.household_id}
+                          onSuccess={fetchAllHouseholds}
+                        />
+                      </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-2">
                       {household.citizens.map((member) => (
                         <div
