@@ -126,9 +126,9 @@ export async function GET() {
       ),
       genderDistribution: {
         male:
-          citizenStats.find((s) => s.gender === "Male")?._count.citizen_id || 0,
+          citizenStats.find((s) => s.gender === "male")?._count.citizen_id || 0,
         female:
-          citizenStats.find((s) => s.gender === "Female")?._count.citizen_id ||
+          citizenStats.find((s) => s.gender === "female")?._count.citizen_id ||
           0,
       },
       vaccinationStats: {
