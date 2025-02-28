@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = "psql 'postgres://avnadmin:AVNS_qGSA880d8yjyFdVi7mR@pg-3038332c-aviralavichal-cc4e.l.aivencloud.com:19808/defaultdb?sslmode=require'"
+  provider = "postgresql"  
+  url      = "postgresql://22CS30056:sumit%23123@10.5.18.73:5432/22CS30056"
 }
 
 model assets {
