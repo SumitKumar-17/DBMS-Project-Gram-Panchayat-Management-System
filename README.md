@@ -1,9 +1,9 @@
 # DBMS Group Project
 
 ## Group Members
-- [] Sumit Kumar 22CS30056
-- [] Aviral Singh 22CS30015
-- [] Mayash Nayak  22CS30064
+- Sumit Kumar 22CS30056
+- Aviral Singh 22CS30015
+- Mayash Nayak  22CS30064
 
 
 # Next.js Project with Prisma
