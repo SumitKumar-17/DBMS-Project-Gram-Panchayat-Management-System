@@ -1,93 +1,173 @@
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
-import { DashboardStats } from "@/types/monitor";
 
 export async function GET() {
   try {
-    // Get total citizens and gender distribution
-    const citizens = await prismadb.citizens.findMany({
-      select: {
-        gender: true,
+    // Fetch total citizens and gender distribution
+    const citizenStats = await prismadb.citizens.groupBy({
+      by: ["gender"],
+      _count: {
+        citizen_id: true,
       },
     });
 
-    const totalCitizens = citizens.length;
-    const genderDistribution = citizens.reduce(
-      (acc, curr) => {
-        if (curr.gender.toLowerCase() === "male") acc.male++;
-        if (curr.gender.toLowerCase() === "female") acc.female++;
-        return acc;
+    // Fetch household stats
+    const householdStats = await prismadb.households.aggregate({
+      _count: {
+        household_id: true,
       },
-      { male: 0, female: 0 },
-    );
-
-    // Get vaccination statistics
-    const vaccinations = await prismadb.vaccinations.findMany({
-      select: {
-        vaccine_type: true,
+      _avg: {
+        income: true,
       },
     });
 
-    const vaccineTypes = vaccinations.reduce(
-      (acc: { [key: string]: number }, curr) => {
-        acc[curr.vaccine_type] = (acc[curr.vaccine_type] || 0) + 1;
-        return acc;
-      },
-      {},
+    // Get income distribution in ranges
+    const incomeRanges = [
+      { min: 0, max: 50000, label: "0-50K" },
+      { min: 50000, max: 100000, label: "50K-1L" },
+      { min: 100000, max: 200000, label: "1L-2L" },
+      { min: 200000, max: 500000, label: "2L-5L" },
+      { min: 500000, max: Infinity, label: "5L+" },
+    ];
+
+    const incomeDistribution = await Promise.all(
+      incomeRanges.map(async (range) => {
+        const count = await prismadb.households.count({
+          where: {
+            income: {
+              gte: range.min,
+              ...(range.max !== Infinity ? { lt: range.max } : {}),
+            },
+          },
+        });
+        return { range: range.label, count };
+      })
     );
 
-    // Get land statistics
-    const landRecords = await prismadb.land_records.findMany({
+    // Fetch asset stats
+    const assetStats = await prismadb.assets.aggregate({
+      _count: {
+        asset_id: true,
+      },
+    });
+
+    const assetDistribution = await prismadb.assets.groupBy({
+      by: ["type"],
+      _count: {
+        asset_id: true,
+      },
+    });
+
+    // Get recent installations
+    const recentInstallations = await prismadb.assets.findMany({
+      orderBy: {
+        installation_date: "desc",
+      },
+      take: 5,
       select: {
+        type: true,
+        location: true,
+        installation_date: true,
+      },
+    });
+
+    // Fetch vaccination stats
+    const vaccinationStats = await prismadb.vaccinations.aggregate({
+      _count: {
+        vaccination_id: true,
+      },
+    });
+
+    const vaccineTypes = await prismadb.vaccinations.groupBy({
+      by: ["vaccine_type"],
+      _count: {
+        vaccination_id: true,
+      },
+    });
+
+    // Fetch land stats
+    const landStats = await prismadb.land_records.aggregate({
+      _sum: {
         area_acres: true,
-        crop_type: true,
       },
     });
 
-    const totalLand = landRecords.reduce(
-      (sum, record) => sum + Number(record.area_acres),
-      0,
-    );
-
-    const cropDistribution = landRecords.reduce(
-      (acc: { [key: string]: number }, curr) => {
-        acc[curr.crop_type] =
-          (acc[curr.crop_type] || 0) + Number(curr.area_acres);
-        return acc;
-      },
-      {},
-    );
-
-    // Get scheme statistics
-    const schemeEnrollments = await prismadb.scheme_enrollments.findMany({
-      include: {
-        welfare_schemes: true,
+    const cropDistribution = await prismadb.land_records.groupBy({
+      by: ["crop_type"],
+      _count: {
+        land_id: true,
       },
     });
 
-    const schemeDistribution = schemeEnrollments.reduce(
-      (acc: { [key: string]: number }, curr) => {
-        const schemeName = curr.welfare_schemes.name;
-        acc[schemeName] = (acc[schemeName] || 0) + 1;
-        return acc;
+    // Fetch scheme stats
+    const schemeStats = await prismadb.scheme_enrollments.aggregate({
+      _count: {
+        enrollment_id: true,
       },
-      {},
-    );
+    });
 
-    const stats: DashboardStats = {
-      totalCitizens,
-      genderDistribution,
+    const schemeDistribution = await prismadb.scheme_enrollments.groupBy({
+      by: ["scheme_id"],
+      _count: {
+        enrollment_id: true,
+      },
+      orderBy: {
+        _count: {
+          enrollment_id: "desc",
+        },
+      },
+    });
+
+    // Format the response
+    const stats = {
+      totalCitizens: citizenStats.reduce(
+        (acc, curr) => acc + curr._count.citizen_id,
+        0
+      ),
+      genderDistribution: {
+        male:
+          citizenStats.find((s) => s.gender === "Male")?._count.citizen_id || 0,
+        female:
+          citizenStats.find((s) => s.gender === "Female")?._count.citizen_id ||
+          0,
+      },
       vaccinationStats: {
-        totalVaccinations: vaccinations.length,
-        vaccineTypes,
+        totalVaccinations: vaccinationStats._count.vaccination_id,
+        vaccineTypes: Object.fromEntries(
+          vaccineTypes.map((v) => [v.vaccine_type, v._count.vaccination_id])
+        ),
       },
       landStats: {
-        totalLand,
-        cropDistribution,
+        totalLand: Number(landStats._sum.area_acres) || 0,
+        cropDistribution: Object.fromEntries(
+          cropDistribution.map((c) => [c.crop_type, c._count.land_id])
+        ),
       },
       schemeStats: {
-        totalEnrollments: schemeEnrollments.length,
-        schemeDistribution,
+        totalEnrollments: schemeStats._count.enrollment_id,
+        schemeDistribution: Object.fromEntries(
+          schemeDistribution.map((s) => [
+            s.scheme_id.toString(),
+            s._count.enrollment_id,
+          ])
+        ),
+      },
+      householdStats: {
+        totalHouseholds: householdStats._count.household_id,
+        averageIncome: Math.round(Number(householdStats._avg.income) || 0),
+        incomeDistribution,
+      },
+      assetStats: {
+        totalAssets: assetStats._count.asset_id,
+        assetDistribution: assetDistribution.map((a) => ({
+          type: a.type,
+          count: a._count.asset_id,
+        })),
+        recentInstallations: recentInstallations.map((i) => ({
+          type: i.type,
+          location: i.location,
+          installationDate: i.installation_date.toISOString(),
+        })),
       },
     };
 
@@ -95,8 +175,8 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching monitor stats:", error);
     return NextResponse.json(
-      { message: "Failed to fetch statistics" },
-      { status: 500 },
+      { message: "Internal server error" },
+      { status: 500 }
     );
   }
 }

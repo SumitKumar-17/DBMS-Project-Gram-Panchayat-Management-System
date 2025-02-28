@@ -4,7 +4,7 @@ import { CitizenDetails } from "@/types/models";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -12,7 +12,7 @@ export async function GET(
     if (!id) {
       return NextResponse.json(
         { message: "Citizen ID is required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -20,7 +20,7 @@ export async function GET(
     if (isNaN(citizenId)) {
       return NextResponse.json(
         { message: "Invalid Citizen ID" },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const citizen = (await prismadb.citizens.findUnique({
@@ -33,13 +33,31 @@ export async function GET(
             welfare_schemes: true,
           },
         },
+        households: {
+          include: {
+            citizens: {
+              where: {
+                NOT: {
+                  citizen_id: citizenId,
+                },
+              },
+              select: {
+                citizen_id: true,
+                name: true,
+                dob: true,
+                gender: true,
+                educational_qualification: true,
+              },
+            },
+          },
+        },
       },
     })) as CitizenDetails | null;
 
     if (!citizen) {
       return NextResponse.json(
         { message: "Citizen not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -48,7 +66,7 @@ export async function GET(
     console.error("Error fetching citizen data:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

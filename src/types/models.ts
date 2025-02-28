@@ -40,4 +40,30 @@ export interface CitizenDetails extends Citizen {
   vaccinations: Vaccination[];
   land_records: LandRecord[];
   scheme_enrollments: SchemeEnrollment[];
+  households: {
+    household_id: number;
+    address: string;
+    income: number;
+    citizens: {
+      citizen_id: number;
+      name: string;
+      dob: string;
+      gender: string;
+      educational_qualification: string;
+    }[];
+  };
+}
+
+export interface HouseholdWithMembers {
+  household_id: number;
+  address: string;
+  income: number;
+  citizens: Citizen[];
+}
+
+export interface Asset {
+  asset_id: number;
+  type: string;
+  location: string;
+  installation_date: Date | string;
 }

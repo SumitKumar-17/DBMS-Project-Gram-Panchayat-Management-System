@@ -16,4 +16,24 @@ export interface DashboardStats {
     totalEnrollments: number;
     schemeDistribution: { [key: string]: number };
   };
+  householdStats: {
+    totalHouseholds: number;
+    averageIncome: number;
+    incomeDistribution: {
+      range: string;
+      count: number;
+    }[];
+  };
+  assetStats: {
+    totalAssets: number;
+    assetDistribution: {
+      type: string;
+      count: number;
+    }[];
+    recentInstallations: {
+      type: string;
+      location: string;
+      installationDate: string;
+    }[];
+  };
 }
