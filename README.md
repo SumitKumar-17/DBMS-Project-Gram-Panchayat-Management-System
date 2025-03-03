@@ -94,9 +94,9 @@ The schema documentation for the project is available [here](documents/schema.md
 ## ER Diagram
 
 You can view the ER Diagram for the database schema below:
-![ER Diagram](documents/DBMS ER diagram (UML notation) (1).pdf)
+![ER Diagram](documents/ER.png)
 
 ## Prisma Diagram
 
 You can view the Prisma Diagram for the database schema below:
-![ER Diagram](documents/schema.png)
+![Prisma Diagram](documents/schema.png)
