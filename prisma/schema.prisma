@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"  
-  url      = "postgresql://22CS30056:sumit%23123@10.5.18.73:5432/22CS30056"
+  url      = env("DATABASE_URL")
 }
 
 model assets {
