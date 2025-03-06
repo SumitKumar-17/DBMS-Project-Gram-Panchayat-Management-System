@@ -36,7 +36,6 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className="w-64 bg-white shadow-md">
         <div className="p-4 bg-indigo-600 text-white">
           <h2 className="text-lg font-semibold">Panchayat System</h2>
@@ -57,7 +56,6 @@ export default function DashboardLayout({
         </nav>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 overflow-auto">
         <header className="bg-white shadow">
           <div className="px-4 py-6">
