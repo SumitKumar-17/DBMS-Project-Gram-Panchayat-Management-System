@@ -50,13 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const handleLogout = () => {
     // Clear all stored data
     setUser(null);
-    localStorage.clear(); // Clear all localStorage items
-    Cookies.remove("token", { path: "/" }); // Remove the token cookie
-
-    // Clear any other app-specific storage you might have
+    localStorage.clear(); 
+    Cookies.remove("token", { path: "/" }); 
     sessionStorage.clear();
-
-    // Redirect to home page
     window.location.href = "/";
   };
 
